@@ -1,0 +1,6 @@
+{
+  "name": "Ob/Gyn Shadowing Observation Log",
+  "description": "Clinical shadowing observation and friction point logger with AEIOU classification, status tracking, and export for medical student internship teams.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

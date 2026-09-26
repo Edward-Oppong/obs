@@ -1,0 +1,48 @@
+{
+  "entities": {
+    "Observation": {
+      "collection": "observations",
+      "fields": {
+        "sessionId": { "type": "string", "description": "Shared ID grouping blocks logged in the same shadowing session" },
+        "date": { "type": "string", "description": "Observation date in YYYY-MM-DD format" },
+        "group": { "type": "string", "enum": ["A", "B", "C", "D", "E"], "description": "Student internship group" },
+        "setting": { "type": "string", "description": "Clinical department area (e.g. Antenatal Clinic, Labor & Delivery Ward, Triage, OR/C-Section, Postpartum, Ultrasound)" },
+        "roles": { "type": "string", "description": "Clinical and patient roles involved (e.g., Attending, Resident, Midwife, Scrub Nurse, Patient, Partner). Strictly no patient identifiers." },
+        "observation": { "type": "string", "description": "What was noticed / friction point observed" },
+        "description": { "type": "string", "description": "Optional extra context or background detail" },
+        "quote": { "type": "string", "description": "Optional verbatim quote, strictly anonymized" },
+        "aeiou": { "type": "string", "enum": ["Activities", "Environment", "Interactions", "Objects", "Users"], "description": "AEIOU observational framework lens" },
+        "severity": { "type": "string", "enum": ["Low", "Medium", "High"], "description": "Impact or risk level of the friction point" },
+        "frequency": { "type": "string", "enum": ["One-off", "Recurring", "Not sure"], "description": "Observed recurrence frequency" },
+        "tags": { "type": "array", "description": "Selected taxonomy tags from fixed list" },
+        "status": { "type": "string", "enum": ["New", "Discussed", "Validated", "Prioritized", "Discarded"], "description": "Team review workflow status" },
+        "createdAt": { "type": "timestamp", "description": "Server timestamp of creation" },
+        "createdBy": { "type": "string", "description": "UID of author student" },
+        "creatorEmail": { "type": "string", "description": "Email of author student" },
+        "creatorName": { "type": "string", "description": "Display name of author student" },
+        "updatedAt": { "type": "timestamp", "description": "Server timestamp of last update" },
+        "statusUpdatedAt": { "type": "timestamp", "description": "Server timestamp of last status change" },
+        "statusUpdatedBy": { "type": "string", "description": "UID of team member who updated status" }
+      }
+    },
+    "Comment": {
+      "collection": "observations/{observationId}/comments",
+      "fields": {
+        "by": { "type": "string", "description": "UID of commenting team member" },
+        "authorEmail": { "type": "string", "description": "Email of author" },
+        "authorName": { "type": "string", "description": "Display name of author" },
+        "text": { "type": "string", "description": "Comment body" },
+        "createdAt": { "type": "timestamp", "description": "Server timestamp" }
+      }
+    },
+    "TeamAllowlist": {
+      "collection": "team_allowlist",
+      "fields": {
+        "email": { "type": "string", "description": "Allowed teammate email in lowercase" },
+        "group": { "type": "string", "description": "Assigned group A-E" },
+        "name": { "type": "string", "description": "Student name" },
+        "addedAt": { "type": "timestamp", "description": "Timestamp when added" }
+      }
+    }
+  }
+}

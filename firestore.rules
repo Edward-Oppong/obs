@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Team member verification: Google sign-in with verified email in team roster
+    function isApprovedTeamMember() {
+      return request.auth != null && (
+        request.auth.token.email.lower() in [
+          'christapostolicchurchbubiashie@gmail.com',
+          'intern.a2@hospital.edu',
+          'intern.b1@hospital.edu',
+          'intern.b2@hospital.edu',
+          'intern.c1@hospital.edu',
+          'intern.c2@hospital.edu',
+          'intern.d1@hospital.edu',
+          'intern.d2@hospital.edu',
+          'intern.e1@hospital.edu',
+          'intern1@hospital.edu',
+          'intern2@hospital.edu',
+          'intern3@hospital.edu',
+          'intern4@hospital.edu',
+          'intern5@hospital.edu',
+          'intern6@hospital.edu',
+          'intern7@hospital.edu',
+          'intern8@hospital.edu'
+        ] ||
+        exists(/databases/$(database)/documents/team_allowlist/$(request.auth.token.email.lower())) ||
+        exists(/databases/$(database)/documents/team_members/$(request.auth.uid))
+      );
+    }
+
+    // Observations collection: No unauthenticated access under any circumstance
+    match /observations/{observationId} {
+      allow read: if request.auth != null;
+      
+      allow create: if isApprovedTeamMember()
+                    && request.resource.data.createdBy == request.auth.uid;
+                    
+      allow update: if isApprovedTeamMember();
+      allow delete: if isApprovedTeamMember();
+
+      // Comments subcollection
+      match /comments/{commentId} {
+        allow read: if request.auth != null;
+        allow create: if isApprovedTeamMember()
+                      && request.resource.data.by == request.auth.uid;
+        allow update, delete: if isApprovedTeamMember()
+                              && resource.data.by == request.auth.uid;
+      }
+    }
+
+    // Team allowlist records for team self-management
+    match /team_allowlist/{email} {
+      allow read: if request.auth != null;
+      allow write: if isApprovedTeamMember();
+    }
+
+    // Team member profiles
+    match /team_members/{uid} {
+      allow read: if request.auth != null;
+      allow write: if isApprovedTeamMember();
+    }
+  }
+}
